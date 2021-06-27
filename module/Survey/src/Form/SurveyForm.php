@@ -63,15 +63,17 @@ class SurveyForm extends Form
             case SurveyQuestion::TYPE_TEXT:
                 $element['type'] = 'textarea';
             break;
+
             case SurveyQuestion::TYPE_SELECT:
                 $element['type'] = 'select';
                 $element['options']['empty_option'] = 'Please select...';
                 $element['options']['value_options'] = $this->createOptions($question);
             break;
+
             case SurveyQuestion::TYPE_MULTI_SELECT:
                 $element['type'] = 'select';
+                $element['attributes']['multiple'] = true;
                 $element['options']['empty_option'] = 'Please select...';
-                $element['options']['multiple'] = true;
                 $element['options']['value_options'] = $this->createOptions($question);
             break;
         }
