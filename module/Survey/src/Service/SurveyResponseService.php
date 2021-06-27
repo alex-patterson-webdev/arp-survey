@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Arp\Survey\Service;
 
 use Arp\Survey\Entity\Answer;
+use Arp\Survey\Entity\Survey;
 use Arp\Survey\Entity\SurveyQuestion;
 use Arp\Survey\Entity\SurveyResponse;
+use Arp\Survey\Service\Exception\SurveyResponseServiceException;
 
 class SurveyResponseService
 {
@@ -25,9 +27,58 @@ class SurveyResponseService
         $this->storage = $storage;
     }
 
-    public function saveResponse(SurveyResponse $surveyResponse)
+    /**
+     * Load the responses saved for the provided $survey
+     *
+     * @param Survey $survey
+     *
+     * @return SurveyResponse
+     */
+    public function loadResponse(Survey $survey): SurveyResponse
     {
+        $response = new SurveyResponse();
 
+        $answers = [];
+        $data = $this->storage->get();
+        if (!empty($data['answers'])) {
+            foreach ($data['answers'] as $questionId => $value) {
+                $question = $survey->getQuestion($questionId);
+                if (null !== $question) {
+                    $answers[] = $this->createAnswer($question, $value);
+                }
+            }
+            $response->setAnswers($answers);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Save the responses provided to the survey
+     *
+     * @param SurveyResponse $surveyResponse
+     *
+     * @return bool
+     *
+     * @throws SurveyResponseServiceException
+     */
+    public function save(SurveyResponse $surveyResponse): bool
+    {
+        $data = [
+            'answers' => $surveyResponse->toArray(),
+        ];
+
+        try {
+            $this->storage->save($data);
+        } catch (\Exception $e) {
+            throw new SurveyResponseServiceException(
+                sprintf('The survey responses could not be saved: %s', $e->getMessage()),
+                $e->getCode(),
+                $e
+            );
+        }
+
+        return true;
     }
 
     /**
@@ -39,5 +90,19 @@ class SurveyResponseService
     public function createAnswer(SurveyQuestion $question, $value): Answer
     {
         return new Answer($question, $value);
+    }
+
+    /**
+     * Remove any stored responses so we can submit a new one
+     *
+     * @return bool
+     */
+    public function clearResponse(): bool
+    {
+        if ($this->storage->has()) {
+            $this->storage->clear();
+            return true;
+        }
+        return false;
     }
 }
