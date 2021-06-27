@@ -52,7 +52,7 @@ class SurveyForm extends Form
             'name'       => sprintf('question_%d', $question->getId()),
             'type'       => $question->getType(),
             'options'    => [
-                'label' => $question->getTitle(),
+                'label' => $this->createQuestionLabel($question, $answer),
             ],
             'attributes' => [
                 'class' => 'form-control',
@@ -84,6 +84,39 @@ class SurveyForm extends Form
         }
 
         return $element;
+    }
+
+    /**
+     * Generate the question label, optionally modifying it based on previous answers
+     *
+     * @param SurveyQuestion $question
+     * @param Answer|null    $answer
+     *
+     * @return string
+     */
+    private function createQuestionLabel(SurveyQuestion $question, ?Answer $answer = null): string
+    {
+        $label = $question->getTitle();
+
+        if (null === $answer || $question->getId() !== 3) {
+            return $label;
+        }
+
+        $answerValues = $answer->getValue();
+        if (is_array($answerValues)) {
+            $optionTitles = [];
+            foreach ($answerValues as $answerValue) {
+                $option = $question->getOptionByValue($answerValues);
+                if (null !== $option) {
+                    $optionTitles[] = $option->getTitle();
+                }
+            }
+
+            // @todo Full label!
+            $label = implode(',', $optionTitles);
+        }
+
+        return $label;
     }
 
     /**

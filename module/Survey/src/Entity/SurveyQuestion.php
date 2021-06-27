@@ -77,6 +77,14 @@ class SurveyQuestion
     }
 
     /**
+     * @param string $title
+     */
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    /**
      * @return string
      */
     public function getType(): string
@@ -117,5 +125,25 @@ class SurveyQuestion
     public function setOption(QuestionOption $option): void
     {
         $this->options[] = $option;
+    }
+
+    /**
+     * Attempt to return a option that matches the provided value
+     *
+     * @param mixed $value The value that should be matched on
+     *
+     * @return QuestionOption|null
+     */
+    public function getOptionByValue($value): ?QuestionOption
+    {
+        foreach ($this->options as $option) {
+            $optionValue = $option->getValue();
+
+            if ($optionValue === $value) {
+                return $option;
+            }
+        }
+
+        return null;
     }
 }
