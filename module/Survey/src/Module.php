@@ -19,17 +19,4 @@ final class Module
     {
         return include __DIR__ . '/../config/module.config.php';
     }
-
-    /**
-     * Prepare the application
-     *
-     * @param MvcEvent $event
-     */
-    public function onBootstrap(MvcEvent $event): void
-    {
-        $container = $event->getApplication()->getServiceManager();
-
-        // Set the session containers default manager
-        Container::setDefaultManager($container->get(SessionManager::class));
-    }
 }
