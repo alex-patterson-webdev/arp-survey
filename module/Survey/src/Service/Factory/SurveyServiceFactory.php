@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Arp\Survey\Service\Factory;
 
-use Arp\Survey\Service\SessionStorageService;
 use Arp\Survey\Service\SurveyService;
 use Laminas\ServiceManager\Exception\ServiceNotCreatedException;
 use Psr\Container\ContainerInterface;
@@ -28,9 +27,6 @@ final class SurveyServiceFactory
             );
         }
 
-        return new SurveyService(
-            $container->get(SessionStorageService::class),
-            $config
-        );
+        return new SurveyService($config);
     }
 }

@@ -90,7 +90,7 @@ class SurveyService
         $question = new SurveyQuestion(
             $id,
             $questionData['title'],
-            $questionData['title'],
+            $questionData['type'],
             $questionData['page']
         );
 

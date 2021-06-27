@@ -37,17 +37,25 @@ final class SessionStorageService implements StorageServiceInterface
      */
     public function has(): bool
     {
-        return isset($this->container->{$this->key});
+        return !empty($this->container->{$this->key});
     }
 
     /**
      * Return the survey data in the current session
      *
      * @return array
+     *
+     * @throws \JsonException
      */
     public function get(): array
     {
-        return $this->container->{$this->key} ?? [];
+        $data = $this->container->{$this->key} ?? '';
+
+        if (!empty($data)) {
+            return (array)json_decode($data, true, 512, JSON_THROW_ON_ERROR);
+        }
+
+        return [];
     }
 
     /**

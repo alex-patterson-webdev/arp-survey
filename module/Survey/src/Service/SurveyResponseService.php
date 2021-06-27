@@ -40,6 +40,7 @@ class SurveyResponseService
 
         $answers = [];
         $data = $this->storage->get();
+
         if (!empty($data['answers'])) {
             foreach ($data['answers'] as $questionId => $value) {
                 $question = $survey->getQuestion($questionId);
@@ -56,20 +57,32 @@ class SurveyResponseService
     /**
      * Save the responses provided to the survey
      *
-     * @param SurveyResponse $surveyResponse
+     * @param Survey $survey
+     * @param array  $data
      *
      * @return bool
-     *
-     * @throws SurveyResponseServiceException
      */
-    public function save(SurveyResponse $surveyResponse): bool
+    public function save(Survey $survey, array $data = []): bool
     {
-        $data = [
-            'answers' => $surveyResponse->toArray(),
-        ];
+        $response = $this->loadResponse($survey);
+
+        foreach ($data as $key => $value) {
+            $questionId = (int)substr($key, strlen('question_'));
+            if ($questionId <= 0) {
+                continue;
+            }
+            $question = $survey->getQuestion($questionId);
+            if ($question) {
+                $response->setAnswer($this->createAnswer($question, $value));
+            }
+        }
 
         try {
-            $this->storage->save($data);
+            // Remove any existing data
+            $this->storage->clear();
+
+            // Save complete response
+            $this->storage->save(['answers' => $response->toArray()]);
         } catch (\Exception $e) {
             throw new SurveyResponseServiceException(
                 sprintf('The survey responses could not be saved: %s', $e->getMessage()),
