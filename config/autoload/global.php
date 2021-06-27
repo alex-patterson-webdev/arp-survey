@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Arp\Survey\Service\Factory\SessionManagerFactory;
 use Laminas\Session\Config\SessionConfig;
-use Laminas\Session\SessionManager;
 
 return [
     'session_manager' => [
@@ -22,7 +21,7 @@ return [
 
     'service_manager' => [
         'factories' => [
-            SessionManager::class => SessionManagerFactory::class,
+            'ArpSessionManager' => SessionManagerFactory::class,
         ]
     ]
 ];

@@ -8,7 +8,6 @@ use Arp\Survey\Controller\Factory\SurveyControllerFactory;
 use Arp\Survey\Controller\HomeController;
 use Arp\Survey\Controller\SurveyController;
 use Arp\Survey\Entity\SurveyQuestion;
-use Arp\Survey\Form\Factory\SurveyFormFactory;
 use Arp\Survey\Form\SurveyForm;
 use Arp\Survey\Service\Factory\SessionStorageServiceFactory;
 use Arp\Survey\Service\Factory\SurveyResponseServiceFactory;
