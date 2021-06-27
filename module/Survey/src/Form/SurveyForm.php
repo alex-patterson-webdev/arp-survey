@@ -8,6 +8,7 @@ use Arp\Survey\Entity\Answer;
 use Arp\Survey\Entity\Survey;
 use Arp\Survey\Entity\SurveyQuestion;
 use Arp\Survey\Entity\SurveyResponse;
+use http\Env\Response;
 use Laminas\Form\Form;
 
 class SurveyForm extends Form
@@ -25,6 +26,8 @@ class SurveyForm extends Form
     {
         $this->setAttribute('class', 'form');
 
+        // Modify question 3 answer to include answers provided in question 2
+        $this->prepareLabels($survey, $response);
         foreach ($survey->getQuestionsForPage($page) as $question) {
             $answer = null;
             if (null !== $response) {
@@ -52,7 +55,7 @@ class SurveyForm extends Form
             'name'       => sprintf('question_%d', $question->getId()),
             'type'       => $question->getType(),
             'options'    => [
-                'label' => $this->createQuestionLabel($question, $answer),
+                'label' => $question->getTitle(),
             ],
             'attributes' => [
                 'class' => 'form-control',
@@ -87,39 +90,6 @@ class SurveyForm extends Form
     }
 
     /**
-     * Generate the question label, optionally modifying it based on previous answers
-     *
-     * @param SurveyQuestion $question
-     * @param Answer|null    $answer
-     *
-     * @return string
-     */
-    private function createQuestionLabel(SurveyQuestion $question, ?Answer $answer = null): string
-    {
-        $label = $question->getTitle();
-
-        if (null === $answer || $question->getId() !== 3) {
-            return $label;
-        }
-
-        $answerValues = $answer->getValue();
-        if (is_array($answerValues)) {
-            $optionTitles = [];
-            foreach ($answerValues as $answerValue) {
-                $option = $question->getOptionByValue($answerValues);
-                if (null !== $option) {
-                    $optionTitles[] = $option->getTitle();
-                }
-            }
-
-            // @todo Full label!
-            $label = implode(',', $optionTitles);
-        }
-
-        return $label;
-    }
-
-    /**
      * Create an array specification for the questions available options
      *
      * @param SurveyQuestion $question
@@ -134,5 +104,38 @@ class SurveyForm extends Form
         }
 
         return $options;
+    }
+
+    /**
+     * Allow the survey's question labels to be modified by response answers
+     *
+     * @param Survey              $survey
+     * @param SurveyResponse|null $response
+     */
+    private function prepareLabels(Survey $survey, ?SurveyResponse $response): void
+    {
+        if (null === $response) {
+            return;
+        }
+
+        $answer2 = $response->getAnswer(2);
+        $question2 = $survey->getQuestion(2);
+        $question3 = $survey->getQuestion(3);
+
+        if (null !== $answer2 && null !== $question2 && null !== $question3) {
+            $optionLabels = [];
+            foreach ($answer2->getValue() as $value) {
+                $option = $question2->getOptionByValue((int)$value);
+                if (null !== $option) {
+                    $optionLabels[] = $option->getTitle();
+                }
+            }
+
+            if (!empty($optionLabels)) {
+                $question3->setTitle(
+                    sprintf('What do you like about %s', implode(',', $optionLabels))
+                );
+            }
+        }
     }
 }
