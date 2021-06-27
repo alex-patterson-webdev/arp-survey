@@ -7,13 +7,13 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
 
 module.exports = {
-  mode: "development",
+  mode: "production",
   entry: path.resolve(BASE_PATH, 'build', 'assets', 'survey.js'),
   output: {
     path: PUBLIC_PATH,
     filename: "app.js"
   },
-  "watch" : true,
+  "watch" : false,
   "module": {
     rules: [
       {
