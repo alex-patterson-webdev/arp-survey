@@ -23,7 +23,7 @@ use Laminas\ServiceManager\Factory\InvokableFactory;
 return [
     'survey' => [
         'questions' => [
-            [
+            1 => [
                 'title' => 'Please tell us your age',
                 'type' => SurveyQuestion::TYPE_SELECT,
                 'page' => 1,
@@ -35,7 +35,8 @@ return [
                     5 => '60+',
                 ]
             ],
-            [
+
+            2 => [
                 'title' => 'From the following list, which of these animals is your favourite',
                 'type' => SurveyQuestion::TYPE_MULTI_SELECT,
                 'page' => 2,
@@ -46,7 +47,8 @@ return [
                     4 => 'Goldfish',
                 ],
             ],
-            [
+
+            3 => [
                 'title' => 'What do you like about this animal',
                 'type' => SurveyQuestion::TYPE_TEXT,
                 'page' => 3,
@@ -89,6 +91,18 @@ return [
                     'defaults' => [
                         'controller' => SurveyController::class,
                         'action'     => 'complete',
+                    ],
+                ],
+            ],
+
+            // Allow the reset of the provided responses
+            'reset' => [
+                'type'    => Literal::class,
+                'options' => [
+                    'route'    => '/survey/reset',
+                    'defaults' => [
+                        'controller' => SurveyController::class,
+                        'action'     => 'reset',
                     ],
                 ],
             ],

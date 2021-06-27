@@ -45,7 +45,6 @@ class SurveyResponse
     public function setAnswers(array $answers): void
     {
         $this->answers = [];
-
         foreach ($answers as $answer) {
             $this->setAnswer($answer);
         }
@@ -70,10 +69,7 @@ class SurveyResponse
     {
         $data = [];
         foreach ($this->answers as $questionId => $answer) {
-            $data[$questionId] = [
-                'question_id' => $questionId,
-                'value' => $answer->getValue(),
-            ];
+            $data[$questionId] = $answer->getValue();
         }
 
         return $data;
