@@ -7,7 +7,7 @@ A simple PHP survey application
 
 Clone the survey application
 
-    git clone alex-patterson-webdev/arp-survey
+    git clone https://github.com/alex-patterson-webdev/arp-survey.git
 
 Bring up the required containers using Docker
 
