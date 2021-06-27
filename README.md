@@ -11,8 +11,9 @@ Clone the survey application
 
 Bring up the required containers using Docker
 
-    cd arp-survey/
-    docker-composer up -d
+    # cd arp-survey/
+    # docker build .
+    # docker-composer up -d
 
 You can now visit `http://localhost:8080` in your browser to being completing your survey
 
