@@ -1,0 +1,56 @@
+<?php
+
+use Arp\Survey\Entity\Survey;
+use Arp\Survey\Form\SurveyForm;
+
+/** @var Survey $survey */
+$survey = $this->survey;
+/** @var SurveyForm $form */
+$form = $this->form->prepare();
+$page = $this->page;
+
+?>
+
+<div class="row">
+    <div class="col-md-6 offset-3">
+        <h3>Page <?php echo $page; ?></h3>
+    </div>
+</div>
+
+<?php echo $this->form()->openTag($this->form); ?>
+
+<div class="row">
+    <div class="col-md-6 offset-3">
+        <?php foreach ($survey->getQuestionsForPage($page) as $question): ?>
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="form-group">
+                        <label><?php echo $question->getTitle();?>?</label>
+                        <?php
+                            echo $this->formElement(
+                                $form->get(sprintf('question_%d', $question->getId()))
+                            );
+                        ?>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<div class="py-5 text-center">
+    <?php if ($page > 1): ?>
+        <button type="submit" class="btn btn-secondary">Previous</button>
+    <?php endif; ?>
+
+    <?php if ($page < 3): ?>
+        <button type="submit" class="btn btn-primary">Next</button>
+    <?php endif; ?>
+
+    <?php if (3 === $page): ?>
+        <button type="submit" class="btn btn-primary">Finish</button>
+    <?php endif; ?>
+</div>
+
+<?php echo $this->form()->closeTag(); ?>
