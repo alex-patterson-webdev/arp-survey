@@ -18,8 +18,10 @@ class SurveyForm extends Form
      * @param Survey              $survey
      * @param int                 $page
      * @param SurveyResponse|null $response
+     *
+     * @return $this
      */
-    public function createElements(Survey $survey, int $page = 1, ?SurveyResponse $response = null): void
+    public function createElements(Survey $survey, int $page = 1, ?SurveyResponse $response = null): SurveyForm
     {
         $this->setAttribute('class', 'form');
 
@@ -28,8 +30,12 @@ class SurveyForm extends Form
             if (null !== $response) {
                 $answer = $response->getAnswer($question->getId());
             }
-            $this->add($this->createQuestionElement($question, $answer));
+            $this->add(
+                $this->createQuestionElement($question, $answer)
+            );
         }
+
+        return $this;
     }
 
     /**
