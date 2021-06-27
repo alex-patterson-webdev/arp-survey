@@ -20,6 +20,20 @@ class Survey
     }
 
     /**
+     * Return a question matching the provided $id, or NULL if not found
+     *
+     * @param int $id
+     *
+     * @return SurveyQuestion|null
+     */
+    public function getQuestion(int $id): ?SurveyQuestion
+    {
+        return $this->questions[$id] ?? null;
+    }
+
+    /**
+     * Return the question collection
+     *
      * @return SurveyQuestion[]
      */
     public function getQuestions(): array

@@ -36,13 +36,13 @@ class SurveyQuestion
     private int $page;
 
     /**
-     * @param int    $id
-     * @param string $title
-     * @param string $type
-     * @param array  $options
-     * @param int    $page
+     * @param int                   $id
+     * @param string                $title
+     * @param string                $type
+     * @param int                   $page
+     * @param array<QuestionOption> $options
      */
-    public function __construct(int $id, string $title, string $type, array $options = [], int $page = 1)
+    public function __construct(int $id, string $title, string $type, int $page = 1, array $options = [])
     {
         $this->id = $id;
         $this->title = $title;

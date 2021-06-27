@@ -60,4 +60,22 @@ class SurveyResponse
     {
         $this->answers[$answer->getQuestionId()] = $answer;
     }
+
+    /**
+     * Return the answer collection in array format
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        $data = [];
+        foreach ($this->answers as $questionId => $answer) {
+            $data[$questionId] = [
+                'question_id' => $questionId,
+                'value' => $answer->getValue(),
+            ];
+        }
+
+        return $data;
+    }
 }
