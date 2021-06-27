@@ -7,18 +7,10 @@ namespace Arp\Survey\Service;
 use Arp\Survey\Entity\QuestionOption;
 use Arp\Survey\Entity\Survey;
 use Arp\Survey\Entity\SurveyQuestion;
-use Arp\Survey\Entity\SurveyResponse;
 use Arp\Survey\Service\Exception\InvalidArgumentException;
 
 class SurveyService
 {
-    /**
-     * Service used to persist the survey data
-     *
-     * @var StorageServiceInterface
-     */
-    private StorageServiceInterface $storage;
-
     /**
      * Survey question configuration data
      *
@@ -27,20 +19,29 @@ class SurveyService
     private array $config;
 
     /**
-     * @param StorageServiceInterface $storage
-     * @param array                   $config
+     * @param array $config
      */
-    public function __construct(StorageServiceInterface $storage, array $config)
+    public function __construct(array $config)
     {
-        $this->storage = $storage;
         $this->config = $config;
     }
 
+    /**
+     * Create a new Survey instance and populate it with the required question data
+     *
+     * @return Survey
+     *
+     * @throws InvalidArgumentException
+     */
     public function createSurvey(): Survey
     {
-        return new Survey(
-            $this->createQuestions()
-        );
+        if (empty($this->config['questions'])) {
+            throw new InvalidArgumentException(
+                'The survey configuration is missing the required \'questions\' configuration key'
+            );
+        }
+
+        return new Survey($this->createQuestions($this->config['questions']));
     }
 
     /**
@@ -109,12 +110,11 @@ class SurveyService
      */
     public function createQuestionOptions(array $data): array
     {
+        $options = [];
+        foreach ($data as $value => $title) {
+            $options[$value] = new QuestionOption($title, $value);
+        }
 
-    }
-
-
-    public function saveSurveyResponse(SurveyResponse $response): bool
-    {
-
+        return $options;
     }
 }
