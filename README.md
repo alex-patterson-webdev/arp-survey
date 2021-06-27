@@ -15,7 +15,7 @@ Bring up the required containers using Docker
     # docker build .
     # docker-composer up -d
 
-You can now visit `http://localhost:8080` in your browser to being completing your survey
+You can now visit `http://localhost:8080` in your browser to begin completing your survey
 
 ### Unit tests
 
