@@ -1,11 +1,25 @@
+<?php
+    use Arp\Survey\Entity\SurveyResponse;
 
+    /** @var SurveyResponse $response */
+    $response = $this->response;
+    try {
+        $data = json_encode($response->toArray(), JSON_PRETTY_PRINT);
+    } catch (\JsonException $e) {
+        $data = [];
+    }
+?>
 <div class="py-5 text-center">
     <h2>Survey Complete!</h2>
     <p>The survey has been completed. Your answers have been listed below</p>
 
-    <pre><code>{}</code></pre>
-
-    <a class="btn btn-success" href="<?php echo $this->url('survey', ['page' => 1]); ?>">
+    <a class="btn btn-success" href="<?php echo $this->url('reset'); ?>">
         Start a new survey
     </a>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <pre><?php echo $data; ?></pre>
+    </div>
 </div>
